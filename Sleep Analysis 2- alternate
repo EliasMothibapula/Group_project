@@ -1,0 +1,85 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+df = pd.read_csv("Sleep_health_and_lifestyle_dataset.csv")
+print(df.head())
+
+print(df.info())
+
+print(df.describe())
+print(df.isnull().sum())
+df = df.drop_duplicates()
+df
+# GRAPH 1: Number of People with Each Sleep Disorder: This graph shows how many people have Insomnia, Sleep Apnea, or no sleep disorder.
+plt.figure(figsize=(6,4))
+
+sns.countplot(data=df, x="Sleep Disorder")
+
+plt.title("Number of People with Each Sleep Disorder")
+plt.xlabel("Sleep Disorder")
+plt.ylabel("Count")
+
+plt.show()
+# GRAPH 2:Stress Level for Each Sleep Disorder: This helps us see whether people with sleep disorders tend to have higher stress.
+
+plt.figure(figsize=(6,4))
+
+sns.boxplot(
+    data=df,
+    x="Sleep Disorder",
+    y="Stress Level"
+)
+
+plt.title("Stress Level by Sleep Disorder")
+
+plt.show()
+#GRAPH 3:Average Sleep Duration: Which group sleeps the longest?
+
+average_sleep = df.groupby("Sleep Disorder")["Sleep Duration"].mean()
+
+average_sleep.plot(kind="bar")
+
+plt.title("Average Sleep Duration")
+
+plt.xlabel("Sleep Disorder")
+
+plt.ylabel("Hours")
+
+plt.show()
+# GRAPH 4:Average Stress Level
+
+average_stress = df.groupby("Sleep Disorder")["Stress Level"].mean()
+
+average_stress.plot(kind="bar")
+
+plt.title("Average Stress Level")
+
+plt.xlabel("Sleep Disorder")
+
+plt.ylabel("Stress Level")
+
+plt.show()
+# GRAPH 5: Sleep Quality vs Stress Level :We check whether higher stress is associated with poorer sleep quality.
+
+plt.figure(figsize=(6,4))
+
+sns.scatterplot(
+    data=df,
+    x="Stress Level",
+    y="Quality of Sleep"
+)
+
+plt.title("Stress Level vs Sleep Quality")
+
+plt.show()
+plt.figure(figsize=(10,5))
+
+sns.countplot(data=df, x="Occupation", hue="Sleep Disorder")
+
+plt.title("Sleep Disorder by Occupation")
+plt.xlabel("Occupation")
+plt.ylabel("Number of People")
+
+plt.xticks(rotation=45)
+
+plt.show()
