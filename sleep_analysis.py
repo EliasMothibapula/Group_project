@@ -20,3 +20,19 @@ csv_data = """Person ID,Gender,Age,Occupation,Sleep Duration,Quality of Sleep,Ph
 # Read the data into a Pandas DataFrame
 df = pd.read_csv(io.StringIO(csv_data))
 
+# 2. Standardize categorical inconsistencies ("Normal Weight" -> "Normal")
+df["BMI Category"] = df["BMI Category"].replace("Normal Weight", "Normal")
+
+# Fill missing categorical fields with standard defaults
+df["Sleep Disorder"] = df["Sleep Disorder"].fillna("None")
+
+# Drop critical records if they completely lack clean sleep values
+df.dropna(subset=["Sleep Duration", "Quality of Sleep"], inplace=True)
+
+# Split Blood Pressure text ("120/80") into individual numeric tracking columns
+bp_split = df["Blood Pressure"].str.split("/", expand=True)
+df["Systolic BP"] = pd.to_numeric(bp_split[0], errors='coerce')
+df["Diastolic BP"] = pd.to_numeric(bp_split[1], errors='coerce')
+
+# Drop the original messy text column
+df.drop(columns=["Blood Pressure"], inplace=True)
